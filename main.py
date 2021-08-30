@@ -6,6 +6,7 @@ class StartWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("PG TV - Raspi Client")
+        self.screen = None
 
         centralWidget = QWidget()
 
@@ -37,8 +38,7 @@ class StartWindow(QMainWindow):
         self.setCentralWidget(centralWidget)
     
     def loadScreen(self):
-        if self.screen != None:
-            self.screen = Screen(self.pinInput.text())
+        self.screen = Screen(self.pinInput.text())
         self.screen.show()
 
 
