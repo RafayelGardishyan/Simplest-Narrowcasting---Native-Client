@@ -59,28 +59,31 @@ class Screen(QWidget):
         return contentPixmap.scaled(1400, 787, QtCore.Qt.KeepAspectRatio)
 
     def load_image(self):
-        url = "https://pgtv.pythonanywhere.com/internal/get_view/{}".format(self.id)
-        r = requests.get(url)
-        if r.status_code != 200:
-            print("Screen: Could not load next slide")
+        try:
+            url = "https://pgtv.pythonanywhere.com/internal/get_view/{}".format(self.id)
+            r = requests.get(url)
+            if r.status_code != 200:
+                print("Screen: Could not load next slide")
 
-        image = requests.get("https://pgtv.pythonanywhere.com" + r.json()["url"])
+            image = requests.get("https://pgtv.pythonanywhere.com" + r.json()["url"])
 
-        with open("img/" + r.json()["url"][17:], 'wb') as img:
-            img.write(image.content)
-            img.close()
+            with open("img/" + r.json()["url"][17:], 'wb') as img:
+                img.write(image.content)
+                img.close()
 
-        self.contentImage.setPixmap(self.get_pixmap("img/" + r.json()["url"][17:]))
-        self.lowerText.setText(r.json()["sctext"])
+            self.contentImage.setPixmap(self.get_pixmap("img/" + r.json()["url"][17:]))
+            self.lowerText.setText(r.json()["sctext"])
 
-        print("Screen: New image loaded")
+            print("Screen: New image loaded")
 
-        self.topInfo.setText("[ {} | {}° ]".format(r.json()["time"], r.json()["weather"]["temp"]))
-        self.setStyleSheet("background-color: {};".format(r.json()["screen"][0]["fields"]["background_color"]))
-        self.lowerText.setStyleSheet("color: {};".format(r.json()["screen"][0]["fields"]["content_border_color"]))
-        self.topInfo.setStyleSheet("color: {}; margin-right: 100px;".format(r.json()["screen"][0]["fields"]["content_border_color"]))
+            self.topInfo.setText("[ {} | {}° ]".format(r.json()["time"], r.json()["weather"]["temp"]))
+            self.setStyleSheet("background-color: {};".format(r.json()["screen"][0]["fields"]["background_color"]))
+            self.lowerText.setStyleSheet("color: {};".format(r.json()["screen"][0]["fields"]["content_border_color"]))
+            self.topInfo.setStyleSheet("color: {}; margin-right: 100px;".format(r.json()["screen"][0]["fields"]["content_border_color"]))
 
-        print("Screen: New styles applied")
+            print("Screen: New styles applied")
+        except Exception as e:
+            print("Error: {}; trying again".format(e))
 
 
     def load_screen(self):
