@@ -3,6 +3,7 @@ from PyQt5 import QtCore
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+import os
 
 import requests
 
@@ -67,10 +68,11 @@ class Screen(QWidget):
 
             image = requests.get("https://pgtv.pythonanywhere.com" + r.json()["url"])
 
-            with open("img/" + r.json()["url"][17:], 'wb') as img:
-                img.write(image.content)
-                img.close()
-
+            if not os.path.isfile("img/" + r.json()["url"][17:]):            
+                with open("img/" + r.json()["url"][17:], 'wb') as img:
+                    img.write(image.content)
+                    img.close()
+            
             self.contentImage.setPixmap(self.get_pixmap("img/" + r.json()["url"][17:]))
             self.lowerText.setText(r.json()["sctext"])
 
