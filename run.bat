@@ -1,2 +1,3 @@
 pip install -r requirements.txt
-python main.py
+start "" python text_loader.py
+start "" python main.py
